@@ -17,8 +17,10 @@ Background subtraction and motion flow algorithms will run on the OpenCL device 
 This is an openFrameworks application, so you need openFrameworks to build it : http://openframeworks.cc/download/
 The common way is to put this repo inside the `apps/myApps` folder.
 Then use the openFrameworks project generator to generate an IDE project.
+But this way hasn't been tested for a while.
 
-The alternative way, is to use a CMake build system : https://github.com/aspeteRakete/of.
+The alternative way, which is recommanded, is to use a CMake build system : https://github.com/ofnode/of/tree/nebula-eye.
+Please note that you need to checkout the `nebula-eye` branch.
 If you feel confortable with CMake but doesn't know openFrameworks very well, this could be easier.
 Also, with CMake you choose your project generator, and then you can use Ninja.
 
@@ -36,11 +38,44 @@ So after update the submodule you be ready to configure and build.
 
 ### Known issues on OSX
 
-CMake system fails to build some ofxOSC dependency
-and the OpenCV library shipped with openFraworks doesn't include openCL support (which is needed).
+OpenCV library shipped with openFraworks or brew doesn't include openCL support (which is needed).
+Thus you need to build it yourself with the following command : 
 
-You have to install opencv library from Homebrew :
-    brew install opencv
+	git clone --branch 2.4.13.7 --single-branch  --depth=1 https://github.com/opencv/opencv.git
+	mkdir build-opencv
+	cd build-opencv
+	cmake ../opencv -GNinja \
+      -DBUILD_opencv_apps=OFF \
+      -DBUILD_opencv_calib3d=ON  \
+	  -DBUILD_opencv_contrib=OFF \
+	  -DBUILD_opencv_core=ON \
+	  -DBUILD_opencv_features2d=ON \
+	  -DBUILD_opencv_flann=ON \
+	  -DBUILD_opencv_gpu=OFF \
+	  -DBUILD_opencv_highgui=ON \
+	  -DBUILD_opencv_imgproc=ON \
+	  -DBUILD_opencv_legacy=ON \
+	  -DBUILD_opencv_ml=ON \
+	  -DBUILD_opencv_nonfree=OFF \
+	  -DBUILD_opencv_objdetect=ON \
+	  -DBUILD_opencv_ocl=ON \
+	  -DBUILD_opencv_photo=OFF \
+	  -DBUILD_opencv_python=OFF \
+	  -DBUILD_opencv_stitching=OFF \
+	  -DBUILD_opencv_superres=OFF \
+	  -DBUILD_opencv_ts=OFF \
+	  -DBUILD_opencv_video=ON \
+	  -DBUILD_opencv_videostab=OFF \
+	  -DBUILD_opencv_world=OFF \
+	  -DBUILD_TEST=OFF \
+	  -DBUILD_DOCS=OFF
+	ninja
+	ninja install
 
-Then generate an XCode project from openFrameworks "Project Generator" and patch the XCode project to add opencv header path and link libraries.
-A preconfigured XCode project is included in this repository.
+If you want to open network stream, you also need FFMPEG and/or GStreamer : 
+
+    brew install ffmpeg gstreamer gst-plugins-base gst-plugins-good
+
+and so on...
+
+You could check which backend is supported when configuring project with CMake.
