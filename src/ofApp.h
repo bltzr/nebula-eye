@@ -10,7 +10,6 @@
 #include "nebulaVideoSrc.h"
 #include "nebulaFlow.h"
 #include "nebulaBackground.h"
-#include "nebulaPix_share.h"
 #include "nebulaContourFinder.h"
 #include "nebulaZone.h"
 
@@ -65,6 +64,4 @@ class nebulaEye : public ofBaseApp
     wng::ofxCsv csvRecorder;
 
     vector<float> flowZone;
-
-    nebulaPix_share pix_share;
 };

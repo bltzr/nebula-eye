@@ -6,15 +6,13 @@ cmake_minimum_required(VERSION 2.8)
 include(../of/openFrameworks.cmake)
 find_package( OpenCV REQUIRED )
 
+message(STATUS "OpenCV include dir: ${OpenCV_INCLUDE_DIR}")
+message(STATUS "OpenCV libs: ${OpenCV_LIBS}")
+
 ofxaddon(ofxGui)
 ofxaddon(ofxOsc)
 ofxaddon(ofxCv)
-ofxaddon(ofxGStreamer)
-ofxaddon(ofxGstRTP)
-ofxaddon(ofxDepthStreamCompression)
-ofxaddon(ofxSnappy)
 ofxaddon(ofxCsv)
-ofxaddon(ofxGem)
 
 include_directories (
  ${CMAKE_CURRENT_LIST_DIR}/ofxCv/libs/ofxCv/include/
@@ -26,7 +24,6 @@ set(SOURCES
     src/nebulaBackground.cpp
     src/nebulaContourFinder.cpp
     src/nebulaFlow.cpp
-    src/nebulaPix_share.cpp
     src/nebulaUtils.cpp
     src/nebulaVideoSrc.cpp
     src/nebulaZone.cpp

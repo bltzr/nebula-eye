@@ -1,9 +1,5 @@
 ofxCv
-ofxGStreamer
-ofxGstRTP
 ofxGui
 ofxOpenCv2
 ofxOsc
-ofxDepthStreamCompression
-ofxSnappy
 ofxCsv

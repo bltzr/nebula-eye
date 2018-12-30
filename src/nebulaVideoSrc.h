@@ -1,7 +1,10 @@
 #pragma once
 
+#include "ofMain.h"
 #include "ofxGui.h"
-#include "ofxGstRTPClient.h"
+
+#include <opencv2/core.hpp>
+#include <opencv2/highgui.hpp>
 
 class nebulaVideoSrc
 {
@@ -17,9 +20,13 @@ public:
     void srcRTPCb(bool & flag);
 
     ofVideoPlayer movie;
-    ofxGstRTPClient client;
     ofTexture texture;
     ofParameterGroup guiGrp;
 
+    cv::VideoCapture m_cap;
+    ofImage m_img;
+    cv::Mat m_frame;
+
     ofParameter<bool> srcMovie, srcRTP;
+    ofParameter<string> url;
 };
