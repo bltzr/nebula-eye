@@ -212,9 +212,10 @@ void nebulaEye::keyPressed(int key){
 
 void nebulaEye::sendOSC(){
   ofxOscBundle bundle;
+  // Send blob positions as one message per frame
+  ofxOscMessage m;
+  m.setAddress("/b");
   for (int i = 0; i < contour.finder.size(); i++ ){
-    ofxOscMessage m;    
-    m.setAddress("/b");
     m.addInt32Arg(contour.finder.getLabel(i));
     ofVec2f centroid = ofxCv::toOf(contour.finder.getCentroid(i));
     centroid.x /= bgSub.m_fgmask.cols;
@@ -230,18 +231,21 @@ void nebulaEye::sendOSC(){
     pt.x = contour.finder.getCentroid(i).x / contour.blurred.cols;
     pt.y = contour.finder.getCentroid(i).y / contour.blurred.cols;
     m.addInt32Arg(zone.inside(pt));
-    bundle.addMessage(m);
-  }
 
-  ofxOscMessage m;
-  m.setAddress("/f");
+  }
+  bundle.addMessage(m);
+
+  // Send motion flow as one message per frame
+  ofxOscMessage n;
+  n.setAddress("/f");
   flowZone.clear();
   for ( int i = 0; i < zone.mask.size() ; i++ ){
       double f = flow.getFlowInMask(zone.mask[i], NULL);
       flowZone.push_back(f);
-      m.addFloatArg(f);
+      n.addFloatArg(f);
   }
-  bundle.addMessage(m);
+  bundle.addMessage(n);
+
   sender.sendBundle(bundle);
 }
 
