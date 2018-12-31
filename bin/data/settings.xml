@@ -1,0 +1,56 @@
+<group>
+	<display>
+		<show_this_menu>0</show_this_menu>
+		<show_video>0</show_video>
+		<show_bgsub>0</show_bgsub>
+		<bg_intensity>127</bg_intensity>
+		<show_contour>0</show_contour>
+		<show_motion_flow>0</show_motion_flow>
+		<show_zone>0</show_zone>
+		<debug>0</debug>
+		<mouse_blob_simulation>0</mouse_blob_simulation>
+	</display>
+	<video_source>
+		<url>rtp://127.0.0.1:5000</url>
+		<RTP_stream>0</RTP_stream>
+		<movie>1</movie>
+	</video_source>
+	<Background_substraction>
+		<enable>1</enable>
+		<force_CPU>0</force_CPU>
+		<threshold>60</threshold>
+		<use_common_algo>0</use_common_algo>
+		<use_GMG_algo>0</use_GMG_algo>
+		<use_MOG_algo>0</use_MOG_algo>
+		<use_MOG2_algo>1</use_MOG2_algo>
+		<show_bgsub_parameters>1</show_bgsub_parameters>
+	</Background_substraction>
+	<Motion_flow_parameters>
+		<enable>0</enable>
+		<Force_CPU>0</Force_CPU>
+		<fbPyrScale>0.5</fbPyrScale>
+		<fbLevels>4</fbLevels>
+		<fbIterations>2</fbIterations>
+		<fbPolyN>7</fbPolyN>
+		<fbPolySigma>1.5</fbPolySigma>
+		<fbUseGaussian>0</fbUseGaussian>
+		<winSize>32</winSize>
+	</Motion_flow_parameters>
+	<Blob_tracker>
+		<enable>1</enable>
+		<minimum_area_radius>23</minimum_area_radius>
+		<maximum_area_radius>120</maximum_area_radius>
+		<threshold>22</threshold>
+		<erode>1</erode>
+		<blur>12</blur>
+		<persistence>15</persistence>
+		<max_distance>32</max_distance>
+		<show_label>1</show_label>
+	</Blob_tracker>
+	<Zones_settings>
+		<zone_radius>0.075958, 0.295087, 0.326635</zone_radius>
+		<center>0.474177, 0.255519</center>
+		<ref_axis>0</ref_axis>
+	</Zones_settings>
+<group/>
+</group>

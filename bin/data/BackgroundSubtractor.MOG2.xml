@@ -1,0 +1,27 @@
+<BackgroundSubtractor_GMG>
+	<learningTime>0.1</learningTime>
+	<backgroundPrior>0.8</backgroundPrior>
+	<decisionThreshold>0.8</decisionThreshold>
+	<initializationFrames>100</initializationFrames>
+	<learningRate>0.025</learningRate>
+	<maxFeatures>0</maxFeatures>
+	<quantizationLevels>0</quantizationLevels>
+	<smoothingRadius>0</smoothingRadius>
+	<updateBackgroundModel>1</updateBackgroundModel>
+<BackgroundSubtractor_GMG/>
+<BackgroundSubtractor_MOG2>
+		<learningTime>0.135</learningTime>
+		<backgroundRatio>0.9</backgroundRatio>
+		<detectShadows>1</detectShadows>
+		<fCT>0.05</fCT>
+		<fTau>0.5</fTau>
+		<fVarInit>15</fVarInit>
+		<fVarMax>75</fVarMax>
+		<fVarMin>4</fVarMin>
+		<history>0</history>
+		<nShadowDetection>127</nShadowDetection>
+		<nmixtures>0</nmixtures>
+		<varThreshold>16</varThreshold>
+		<varThresholdGen>9</varThresholdGen>
+	</BackgroundSubtractor_MOG2>
+</BackgroundSubtractor_GMG>
