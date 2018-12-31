@@ -153,9 +153,10 @@ void nebulaEye::draw()
 
   if (showGui){
     gui.draw();
+    recordPanel.draw();
   }
 
-  recordPanel.draw();
+
 }
 
 void nebulaEye::exit()
