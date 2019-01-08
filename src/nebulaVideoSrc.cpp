@@ -12,7 +12,7 @@ void nebulaVideoSrc::setup()
   srcRTP.addListener(this, &nebulaVideoSrc::srcRTPCb);
 
   try {
-    m_cap.open(url.get());
+    m_cap.open(0); //was: m_cap.open(url.get());
   } catch (...)
   {
 
