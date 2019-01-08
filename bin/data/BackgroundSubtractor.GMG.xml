@@ -1,0 +1,12 @@
+<BackgroundSubtractor_GMG>
+	<learningTime>0.1</learningTime>
+	<backgroundPrior>0.8</backgroundPrior>
+	<decisionThreshold>0.8</decisionThreshold>
+	<initializationFrames>100</initializationFrames>
+	<learningRate>0.025</learningRate>
+	<maxFeatures>0</maxFeatures>
+	<quantizationLevels>0</quantizationLevels>
+	<smoothingRadius>0</smoothingRadius>
+	<updateBackgroundModel>1</updateBackgroundModel>
+<BackgroundSubtractor_GMG/>
+</BackgroundSubtractor_GMG>

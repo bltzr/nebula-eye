@@ -11,9 +11,9 @@
 		<mouse_blob_simulation>0</mouse_blob_simulation>
 	</display>
 	<video_source>
-		<url>rtp://127.0.0.1:5000</url>
-		<RTP_stream>0</RTP_stream>
-		<movie>1</movie>
+		<url>rtp://192.168.1.194:5000</url>
+		<RTP_stream>1</RTP_stream>
+		<movie>0</movie>
 	</video_source>
 	<Background_substraction>
 		<enable>1</enable>

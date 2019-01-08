@@ -4,9 +4,9 @@
 void nebulaVideoSrc::setup()
 {
   guiGrp.setName("video source");
-  guiGrp.add(url.set("url","rtp://127.0.0.1:5000"));
-  guiGrp.add(srcRTP.set("RTP stream", false));
-  guiGrp.add(srcMovie.set("movie", true));
+  guiGrp.add(url.set("url","192.168.1.194:5000"));
+  guiGrp.add(srcRTP.set("RTP stream", true));
+  guiGrp.add(srcMovie.set("movie", false));
 
   srcMovie.addListener(this, &nebulaVideoSrc::srcMovieCb);
   srcRTP.addListener(this, &nebulaVideoSrc::srcRTPCb);
