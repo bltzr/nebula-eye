@@ -26,7 +26,7 @@ void nebula::Zone::setup(){
     _register();
     guiGrp.setName("Zones settings");
 
-    guiGrp.add(radius.set("zone radius", ofVec3f(0.01, 0.2, 0.4), ofVec3f(0.05), ofVec3f(0.5)));
+    guiGrp.add(radius.set("zone radius", ofVec3f(0.01, 0.2, 0.4), ofVec3f(0.0001), ofVec3f(0.5)));
     guiGrp.add(center.set("center", ofVec2f(0.5, 0.5), ofVec2f(0., 0.), ofVec2f(1., 1.)));
     guiGrp.add(angleOrigin.set("ref axis",0,-180,180));
 }
