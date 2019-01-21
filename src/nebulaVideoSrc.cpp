@@ -19,15 +19,23 @@ void nebulaVideoSrc::setup()
   }
 
   movie.load("video.mov");
-  movie.play();
+  movie.stop();
+
+  m_crop = cv::Rect(0, 200, 1000, 1000);
+
 }
 
 void nebulaVideoSrc::update(){
   if (srcMovie) movie.update();
   else if (srcRTP){
     m_cap >> m_frame;
+    //m_cropped = m_frame(m_crop).clone();
     ofxCv::toOf(m_frame, m_img);
-    texture.loadData(m_img.getPixels());
+    //ofLog() << "IMG:" << m_img.getWidth() << " " << m_img.getHeight();
+    int cropX1{120}, cropX2{140}, cropY{110}, cropLoY{70};
+    m_img.getPixels().cropTo(cropped, cropX1, cropY, m_img.getWidth()-cropX1-cropX2, m_img.getHeight()-cropY-cropLoY);
+    //ofLog() << "CROP:" << cropped.getWidth() << " " << cropped.getHeight();
+    texture.loadData(cropped);
   }
 }
 
@@ -46,17 +54,19 @@ bool nebulaVideoSrc::isFrameNew(){
 
 ofPixels& nebulaVideoSrc::getPixels(){
   if (srcMovie) return movie.getPixels();
-  else if (srcRTP) return m_img.getPixels();
+  else if (srcRTP) return cropped;
 }
 
 void nebulaVideoSrc::srcMovieCb(bool & flag){
   if (flag) {
     srcRTP=false;
+    movie.play();
   }
 }
 
 void nebulaVideoSrc::srcRTPCb(bool & flag){
   if (flag) {
     srcMovie=false;
+    movie.stop();
   }
 }

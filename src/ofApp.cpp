@@ -2,6 +2,7 @@
 
 void nebulaEye::setup()
 {
+  sender.enableBroadcast();
   sender.setup(OSC_IP, OSC_PORT);
   receiver.setup(OSC_LISTENING_PORT);
   video.setup();
@@ -12,6 +13,7 @@ void nebulaEye::setup()
 
   displayGuiGrp.setName("display");
   displayGuiGrp.add(showGui.set("show this menu",true));
+  displayGuiGrp.add(showBgImage.set("show background",true));
   displayGuiGrp.add(showVideo.set("show video",true));
   displayGuiGrp.add(showBgSub.set("show bgsub",true));
   displayGuiGrp.add(bgSubIntensity.set("bg intensity",127,0,255));
@@ -29,19 +31,20 @@ void nebulaEye::setup()
   gui.add(contour.guiGrp);
   gui.add(zone.guiGrp);
 
-  parameterSync.setup((ofParameterGroup&)gui.getParameter(),6667,"localhost",6666);
-
+  parameterSync.setup((ofParameterGroup&)gui.getParameter(),6667,"192.168.1.108",6666);
 
   recordPanel.setup("record", "recordSetting.xml",10, ofGetHeight()-50);
   recordPanel.add(record.set("recording",false));
-
+                
   ofAddListener(gui.savePressedE, &bgSub, &nebulaBackground::saveAlgoParam);
   showGui.addListener(&bgSub, &nebulaBackground::showGui);
   showZone.addListener(&zone, &nebula::Zone::attach);
   record.addListener(this, &nebulaEye::csvRecordCb);
   mouseTest.addListener(this, &nebulaEye::clearTestImg);
+  //showBgImage.addListener(this, &nebulaEye::showBg);
 
   gui.loadFromFile("settings.xml");
+  bgImg.load("Forme.png");
 
   ofSetCircleResolution(100);
 
@@ -51,7 +54,7 @@ void nebulaEye::setup()
 void nebulaEye::update()
 {
   parameterSync.update();
-  updateOSC();
+  //updateOSC();
   video.update();
   if(video.isFrameNew() || mouseTest){
     if ( mouseTest ){
@@ -66,7 +69,7 @@ void nebulaEye::update()
     cv::Mat maskedImg;
     cvimg.copyTo(maskedImg,~zone.mask[0]);
     bgSub.update(maskedImg);
-    flow.update(img);
+    //flow.update(img);
 
 
     if ( bgSub.enabled ){
@@ -76,12 +79,15 @@ void nebulaEye::update()
     }
 
     sendOSC();
-    recordCSVData();
+    //recordCSVData();
   }
 }
 
 void nebulaEye::draw()
 {
+  int Xoffset = 50;
+  if (showBgImage) bgImg.draw(ofVec3f(Xoffset,0,0), ofGetWindowWidth()-2*Xoffset, ofGetWindowHeight());
+
   int w=ofGetWidth(), h=ofGetHeight();
   if ( ( ofGetHeight() > 0 && img.getHeight() > 0 ) ) {
     if ( ofGetWidth()/ofGetHeight() > img.getWidth()/img.getHeight()){
@@ -153,7 +159,7 @@ void nebulaEye::draw()
 
   if (showGui){
     gui.draw();
-    recordPanel.draw();
+    //recordPanel.draw();
   }
 
 
@@ -212,39 +218,47 @@ void nebulaEye::keyPressed(int key){
 
 void nebulaEye::sendOSC(){
   ofxOscBundle bundle;
-  // Send blob positions as one message per frame
+
+  //double barX{0}, barY{0};
   ofxOscMessage m;
-  m.setAddress("/b");
-  for (int i = 0; i < contour.finder.size(); i++ ){
-    m.addInt32Arg(contour.finder.getLabel(i));
-    ofVec2f centroid = ofxCv::toOf(contour.finder.getCentroid(i));
-    centroid.x /= bgSub.m_fgmask.cols;
-    centroid.y /= bgSub.m_fgmask.rows;
-    centroid -= zone.center;
-    ofVec2f centroidPol = nebula::Utils::carToPol(centroid);
-    centroidPol.y -= zone.angleOrigin;
-    centroidPol.y = ofWrapDegrees(centroidPol.y);
-    m.addFloatArg(centroidPol.x);
-    m.addFloatArg(centroidPol.y);
-    m.addFloatArg(contour.finder.getContourArea(i) / (bgSub.m_fgmask.cols * bgSub.m_fgmask.rows));
-    ofVec2f pt;
-    pt.x = contour.finder.getCentroid(i).x / contour.blurred.cols;
-    pt.y = contour.finder.getCentroid(i).y / contour.blurred.cols;
-    m.addInt32Arg(zone.inside(pt));
+  m.setAddress("/vitesse");
 
-  }
-  bundle.addMessage(m);
-
-  // Send motion flow as one message per frame
   ofxOscMessage n;
-  n.setAddress("/f");
-  flowZone.clear();
-  for ( int i = 0; i < zone.mask.size() ; i++ ){
-      double f = flow.getFlowInMask(zone.mask[i], NULL);
-      flowZone.push_back(f);
-      n.addFloatArg(f);
+  n.setAddress("/rotation");
+
+  ofxOscMessage p;
+  p.setAddress("/position");
+
+  if (contour.finder.size()){
+      /*
+      for (int i = 0; i < contour.finder.size(); i++ ){
+        //m.addInt32Arg(contour.finder.getLabel(i));
+        ofVec2f centroid = ofxCv::toOf(contour.finder.getCentroid(i));
+        centroid.x /= ofGetWindowWidth();
+        centroid.y /= ofGetWindowHeight();
+        centroid -= zone.center;
+        barX+=centroid.x;
+        barY+=centroid.y;
+      }
+      */
+      double vitesse = (1.-contour.getCentroid().y);
+      double vitesseMult = 12.;
+      m.addFloatArg(vitesse*vitesse*vitesseMult);
+      double rotation = (contour.getCentroid().x-0.5)*2.;
+      n.addFloatArg(rotation*abs(rotation));
+      p.addFloatArg(contour.getCentroid().x);
+      p.addFloatArg(contour.getCentroid().y);
+      p.addFloatArg(contour.finder.size());
+  } else {
+      m.addFloatArg(0.);
+      n.addFloatArg(0.);
+      p.addFloatArg(0.);
+      p.addFloatArg(0.);
   }
+
+  bundle.addMessage(m);
   bundle.addMessage(n);
+  bundle.addMessage(p);
 
   sender.sendBundle(bundle);
 }
@@ -339,6 +353,7 @@ void nebulaEye::clearTestImg(bool & flag){
   if ( flag )
    testimg = cv::Mat::zeros(ofGetHeight(), ofGetWidth(), CV_8UC1);
 }
+
 
 void nebulaEye::updateOSC(){
   // check for waiting messages

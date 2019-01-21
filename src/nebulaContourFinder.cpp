@@ -48,6 +48,21 @@ void nebulaContourFinder::update(cv::Mat img){
   ofxCv::erode(gray, blurred, erodeAmount);
   ofxCv::blur(blurred, blurAmount);
   finder.findContours(blurred);
+  centroid = {0,0};
+
+  for (int i = 0; i < finder.size(); i++ ){
+    //m.addInt32Arg(contour.finder.getLabel(i));
+    ofVec2f localCentroid = ofxCv::toOf(finder.getCentroid(i));
+    localCentroid.x /= blurred.cols;
+    localCentroid.y /= blurred.rows;
+    //centroid -= ::zone.center;
+    centroid.x+=localCentroid.x;
+    centroid.y+=localCentroid.y;
+  }
+  centroid.x/=finder.size();
+  centroid.y/=finder.size();
+  //ofLog() << centroid;
+
 }
 
 void nebulaContourFinder::draw(int x, int y, int w, int h){
@@ -103,6 +118,7 @@ void nebulaContourFinder::draw(int x, int y, int w, int h){
   const vector<unsigned int>& previousLabels = tracker.getPreviousLabels();
   const vector<unsigned int>& newLabels = tracker.getNewLabels();
   const vector<unsigned int>& deadLabels = tracker.getDeadLabels();
+  /*
   ofSetColor(ofxCv::cyanPrint);
   for(int i = 0; i < currentLabels.size(); i++) {
     int j = currentLabels[i];
@@ -123,6 +139,7 @@ void nebulaContourFinder::draw(int x, int y, int w, int h){
     int j = deadLabels[i];
     ofDrawLine(j, 12, j, 16);
   }
+  */
   ofPopMatrix();
   ofPopStyle();
 }
@@ -153,4 +170,8 @@ void nebulaContourFinder::persistenceCb(int& val){
 
 void nebulaContourFinder::maxDistanceCb(int& val){
   finder.getTracker().setMaximumDistance(val);
+}
+
+ofVec2f nebulaContourFinder::getCentroid(){
+    return centroid;
 }

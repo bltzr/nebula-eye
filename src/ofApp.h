@@ -13,8 +13,8 @@
 #include "nebulaContourFinder.h"
 #include "nebulaZone.h"
 
-#define OSC_IP "localhost"
-#define OSC_PORT 123456
+#define OSC_IP "192.168.1.108"
+#define OSC_PORT 6868
 #define OSC_LISTENING_PORT 12321
 
 class nebulaEye : public ofBaseApp
@@ -36,6 +36,7 @@ class nebulaEye : public ofBaseApp
     void learningTimeChanged(int & _time);
     void thresholdChanged(int & tresh);
 
+    //void showBg();
     void sendOSC();
     void updateOSC();
 
@@ -47,7 +48,7 @@ class nebulaEye : public ofBaseApp
 
     ofxPanel gui, recordPanel;
     ofParameterGroup displayGuiGrp;
-    ofParameter<bool> showGui, showVideo, showBgSub, showContour, showFlow, showZone, record, mouseTest;
+    ofParameter<bool> showGui, showBgImage, showVideo, showBgSub, showContour, showFlow, showZone, record, mouseTest;
     ofParameter<int> bgSubIntensity, showDebug;
     ofxOscParameterSync parameterSync;
 
@@ -58,6 +59,7 @@ class nebulaEye : public ofBaseApp
     nebula::Zone zone;
 
     ofPixels img;
+    ofImage bgImg;
     cv::Mat testimg;
     ofxOscSender sender;
     ofxOscReceiver receiver;

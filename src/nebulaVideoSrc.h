@@ -22,10 +22,12 @@ public:
     ofVideoPlayer movie;
     ofTexture texture;
     ofParameterGroup guiGrp;
+    ofPixels cropped;
 
     cv::VideoCapture m_cap;
     ofImage m_img;
-    cv::Mat m_frame;
+    cv::Mat m_frame, m_cropped;
+    cv::Rect m_crop;
 
     ofParameter<bool> srcMovie, srcRTP;
     ofParameter<string> url;

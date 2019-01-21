@@ -17,9 +17,13 @@ public:
     void persistenceCb(int& val);
     void maxDistanceCb(int& val);
 
+    ofVec2f getCentroid();
+
 //protected:
     ofxCv::ContourFinder finder;
     ofFbo fbo;
+
+    ofVec2f centroid {0,0};
 
     ofParameterGroup guiGrp;
     ofParameter<int> minAreaRad, maxAreaRad, threshold, blurAmount, erodeAmount, persistence, maxDistance;
